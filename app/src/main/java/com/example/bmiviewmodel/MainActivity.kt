@@ -26,6 +26,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.bmiviewmodel.ui.theme.BMIViewModelTheme
 
 class MainActivity : ComponentActivity() {
@@ -46,12 +47,12 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Bmi() {
-    var heightInput: String by remember { mutableStateOf("") }
-    var weightInput: String by remember { mutableStateOf("") }
-    val height = heightInput.toFloatOrNull() ?: 0.0f
-    val weight = weightInput.toIntOrNull() ?: 0
-    val bmi = if (weight > 0 && height > 0) weight / (height * height) else 0.0
+fun Bmi(BMIViewModel: BMIViewModel = viewModel()) {
+    //var heightInput: String by remember { mutableStateOf("") }
+    //var weightInput: String by remember { mutableStateOf("") }
+    //val height = heightInput.toFloatOrNull() ?: 0.0f
+    //val weight = weightInput.toIntOrNull() ?: 0
+    //val bmi = if (weight > 0 && height > 0) weight / (height * height) else 0.0
 
     Column {
         Text(
@@ -64,22 +65,22 @@ fun Bmi() {
                 .padding(top = 40.dp, bottom = 16.dp)
         )
         OutlinedTextField(
-            value = heightInput,
-            onValueChange = {heightInput=it.replace(',','.')},
+            value = BMIViewModel.heightInput,
+            onValueChange = {BMIViewModel.changeHeightInput(it.replace(',','.'))},
             label = { Text(stringResource(R.string.height)) },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth()
         )
         OutlinedTextField(
-            value = weightInput,
-            onValueChange = {weightInput=it.replace(',','.')},
+            value = BMIViewModel.weightInput,
+            onValueChange = {BMIViewModel.changeWeightInput(it.replace(',','.'))},
             label = { Text(stringResource(R.string.weight)) },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             modifier = Modifier.fillMaxWidth()
         )
-        Text(text = stringResource(R.string.result, String.format("%.2f",bmi).replace(',','.')))
+        Text(text = stringResource(R.string.result, String.format("%.2f",BMIViewModel.BMI()).replace(',','.')))
     }
 }
 
